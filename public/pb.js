@@ -1,43 +1,19 @@
-var users=[];
-var userid=1;
-
 var tab=document.getElementById("tab");
-var btn=document.getElementById("au");
+var btn1=document.getElementById("au");
 var frm=document.getElementById("frm");
-var divListUsers=document.getElementById("divListUsers");
-
-var d=JSON.parse(localStorage.getItem("users"));
-if(d)
-{
- for(var i=0;i<d.length;i++)
- {
- 
-      var objProduct = new Object();
-    
-    objProduct.Id = productId;
-    objProduct.Name = d[i].Name;
-    objProduct.Email = d[i].Email;
-    objProduct.Phone = d[i].Phone;
-    objProduct.Address = d[i].Address;
-    users.push(objProduct);
-    addusertoDOM(objProduct);
-    userid++;
- }
-}
 function adduser()
 {
-    console.log('okk');
-    hide();
-   var form=document.createElement("form");
-form.setAttribute("action","/add","method","post");
-//form.setAttribute("mexthod","post");
-form.setAttribute("onSubmit","addusertoArray()");
+    hide(btn1);
+    var form=document.createElement("form");
+form.setAttribute("action","/add");
+form.setAttribute("method","post");
+form.setAttribute("onSubmit","unhide(btn1);hide(frm);addTolist()");
 	var textname=document.createElement("input");
 	textname.setAttribute("type","text");
 	textname.setAttribute("class","box2");
     textname.setAttribute("name","name");
     textname.setAttribute("id","name");
-	textname.setAttribute("placeholder","name");
+	textname.setAttribute("placeholder","Name");
 	textname.setAttribute("required","true");
 	form.appendChild(textname);
 
@@ -84,84 +60,49 @@ form.setAttribute("onSubmit","addusertoArray()");
 
  	var btn=document.createElement("button");
  	btn.setAttribute("type","submit");
- 	btn.setAttribute("class","abc");
+ 	btn.setAttribute("class","aub");
  	btn.innerHTML="Add User";
 
      form.appendChild(btn);
+     
     frm.appendChild(form);
 }
-
-function addusertoArray()
+function hide(i)
 {
-    console.log('okk');
-    var objuser = new Object();
-    
-    objuser.Id = productId;
-    objuser.Name = document.getElementById("textname").value;
-
-    objuser.Email = document.getElementById("textemail").value;
-
-    objuser.Phone = document.getElementById("textPhone").value;
-
-    objuser.Address = document.getElementById("textaddress").value;
-  
-    users.push(objProduct);
-    flag3=0;
-    addusertoDOM(objuser);
-    userid++;
-     var strArray =  JSON.stringify(users);
-      addtoserver(users);
-      localStorage.setItem("users",strArray);
+i.setAttribute("style","visibility:hidden")
 }
-
-function addusertoDOM(objProduct)
-{   
-    console.log('okk');
-    var divProduct = document.createElement("div");
-    divProduct.setAttribute("id", userid);
-    console.log(productId);
-    var lbluserName = document.createElement("label");
-    lbluserName.innerHTML = objuser.Name;
-
-    divProduct.appendChild(lbluserName);
-    //insertBlankLine(divProduct);
-  
-    var lbluserEmail = document.createElement("label");
-    lbluserEmail.innerHTML = objuser.Email;
-
-    divProduct.appendChild(lbluserEmail);
-//insertBlankLine(divProduct);
-
-        var lbluserPhone = document.createElement("label");
-    lbluserPhone.innerHTML = objuser.Phone;
-    divProduct.appendChild(lbluserPhone);
-    //insertBlankLine(divProduct);
-   
-            var lbluserAddress = document.createElement("label");
-    lbluserAddress.innerHTML = objuser.Address;
- 
-    divProduct.appendChild(lbluserAddress);
-
-    divListUsers.appendChild(divProduct);
-
-}
-
-function hide()
+function unhide(i)
 {
-btn.setAttribute("style","visibility:hidden")
-}
-function unhide()
-{
-btn.setAttribute("style","visibility:visible");
+i.setAttribute("style","visibility:visible")
 }
 function blankline(i)
 {
-	var j=document.createElement("br");
+	var j=document.createElement("br")
 	i.appendChild(j);
 }
-function addtoserver(i)
+function addTolist()
 {
-    xhttp.open("POST","http://localhost:3000/add"); 
-xhttp.setRequestHeader("Content-Type","application/json");
-xhttp.send(JSON.stringify(i));
+    var tr=document.createElement("tr");
+    var td1=document.createElement("td");
+    var name1=document.getElementById("name").value;
+    var name=document.createTextNode(name1);
+    td1.appendChild(name);
+    var td2=document.createElement("td");
+    var email1=document.getElementById("email").value;
+    var email=document.createTextNode(email1);
+    td2.appendChild(email);
+    var td3=document.createElement("td");
+    var phone1=parseInt(document.getElementById("phone").value);
+    var phone=document.createTextNode(phone1);
+    td3.appendChild(phone);
+    var td4=document.createElement("td");
+    var address1=document.getElementById("address").value;
+    var address=document.createTextNode(address1);
+    td4.appendChild(address);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.appendChild(td3);
+    tr.appendChild(td4);
+    tab.appendChild(tr);
+    
 }

@@ -1,6 +1,8 @@
 var express=require("express"); 
 var bodyParser=require("body-parser"); 
 var session = require('express-session');
+var path=require('path');
+var ejs=require('ejs');
 const mongoose = require('mongoose'); 
 mongoose.connect('mongodb://localhost:27017/PhoneBook'); 
 var db=mongoose.connection; 
@@ -17,6 +19,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true
   }));
+  app.set('views',path.join(__dirname,'views'));
+  app.set('view engine','ejs');
 app.use(bodyParser.json()); 
 app.use(express.static('public')); 
 app.use(bodyParser.urlencoded({ 
@@ -38,7 +42,7 @@ app.post('/sign_up', function(req,res){
 db.collection('user').insertOne(data,function(err, collection){ 
         if (err) throw err; 
         console.log("Record inserted Successfully"); 
-              
+           
     }); 
           
     return res.redirect('index.html'); 
@@ -72,47 +76,34 @@ app.post('/login', function(req, res){
         });
         
     });
-// app.post("/add",function(req,res)
-// {
-//     console.log("chl geya");
-//     var name = req.body.textname; 
-//     var email =req.body.textemail; 
-//     var phone = req.body.textphone; 
-//     var address =req.body.textaddress; 
-
-//     var data = { 
-//         "name": name, 
-//         "email":email, 
-//         "password":phone, 
-//         "phone":address 
-//     } 
-//     var bodydata=req.body;
-//     fs.readFile("file.txt",(err,fdata)=>
-//     {
-//         if(err)
-//         {
-//             console.log(err);
-//         }
-//         else
-//         {
-//             filedata=JSON.parse(fdata);
-//             filedata.push(bodydata);
-//     fs.writeFile("file.txt",JSON.stringify(data),(err,data)=>
-//     {
-//         if(err)
-//         {
-//             console.log(err);
-//         }
-//     });
-//     console.log(data);
-
-// }
-// });
-// });
-
+    app.post('/add', function(req, res){
+        name =req.body.name;
+        email = req.body.email;
+        phone = req.body.phone;
+        address = req.body.address;
+        var data = { 
+            "name": name, 
+            "email":email, 
+            "phone":phone, 
+            "address":address 
+        } 
+        db.collection('data').insertOne(data,function(err, collection){ 
+            if (err) throw err; 
+            console.log("Record inserted Successfully"); 
+                  
+        }); 
+        db.collection('data').find({}).toArray(function(err, result) {
+            if (err) throw err;
+            res.render('dU',{"data":result});
+        });
+    });
 app.get('/home',auth,(req,res)=>{
-            res.redirect("phonebook.html");
-    })
+    db.collection('data').find({}).toArray(function(err, result) {
+        if (err) throw err;
+        res.render('dU',{"data":result});
+    });
+    });
+
 app.get('/',function(req,res){ 
 return res.redirect('index.html'); 
 }).listen(3000)
